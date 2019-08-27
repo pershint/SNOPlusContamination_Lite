@@ -1,0 +1,74 @@
+
+Description of different cut configuration toggles
+
+Depending on your ultimate end-game, your config file will want to be configured
+differently.  Here is a guide for helping with this process/building your own
+config file.
+
+Definition note: Pathological(preliminary) cuts are cuts used to remove events not considered
+for the contamination/sacrifice studies.
+
+###----------PATHOLOGICAL CUTS FOR SACRIFICE/CONTAMINATION-----------###
+
+
+fitValid: if true, only events with a valid reconstruction will be used
+to estimate the sacrifice with calibration data/instrumental contamination with
+analysis data.  If false, events with AND without fitValid will be considered.
+
+isCal: if true, only events with the FECD PMT hit in the calibration data
+will be used to estimate the sacrifice with calibration data. 
+(You want this to be true if you're using N16 calibration data)
+
+
+###########ROI CUTS##############
+AVudotrCut: if true, implements the AV cut used to select events from
+the AV ROI.  Specific function should be specified in waterdoc, but is:
+(udotr > (1.0 - 12 *((posr3-%f)**2)))"%(posr3_AVcut)
+E_high, E_low: Defines the energy range for events considered for sacrifice
+analysis
+nhits_high, nhits_low: Defines the nhit range for events consiered for
+sacrifice/contamination analyses
+Z_high,Z_low: Defines the z-range, in centimeters, for events considered for
+sacrifice/contamination studies
+r_high, r_low: Defines the radius, in millimeters, for events considered for
+sacrifice/contamination studies
+udotr_high, udotr_low: Defines the u.r value range for events considered for
+the sacrifice/contamination studies
+
+path_DCmask: Data cleaning pathological cuts applied before performing 
+bifurcation analysis.
+
+path_trigmask: Any events with a flag from this trigger mask
+ will not be considered/used for the sacrifice/contamination studies
+(ND contamination analysis default is esumhi, esumlo, ped, pgt)
+(When doing most DC sacrifice studies, you'll want this to be set to zero)
+
+
+###---------CUTS AND TOGGLES FOR SACRIFICE & BIFURCATION PROCESS-----------------###
+
+cut1_DCmask: Data cleaning cut mask used for cut1 box of bifurcation analysis.
+
+Use rat-tools/DataCleaningTools/dcflags.py to make your mask (any 
+events with a flag in the mask you make are considered "dirty" events). Then,
+input that number into this entry; this mask will be applied when 
+quantifying the DC sacrifice on your input sacrifice
+analysis files (i.e. when using the --sacrifice flag).
+
+cut1_bifurDCmask: Use rat-tools/DataCleaningTools/dcflags.py to make your mask.
+this mask will be applied on the data that fills the bifurcation boxes on your analysis
+data (i.e. files contained in the directory defined with --analysisdir)
+Events that fail this cut alone will go into the b box.
+
+WATER PHASE NOTE: The need for these two masks came from the Neckcut having an artificially
+inflated sacrifice during the November 2017 scan.  Therefore, it is not used when
+quanfiying the sacrifice (was found negligible in the May 2017 scan), but
+ still plays a role in the bifurcation.
+
+cut2_b14, cut2_itr defaults: -0.12 < b14 < 0.95, itr<0.55
+These are the cuts used when either analyzing the classifier sacrifice directly,
+or performing the data/MC comparison of the classifiers.  Additionally, for
+the bifurcation analysis, these cuts indicate whether or not events fail the
+classifier cut of the bifurcation analysis (i.e. go into the c box).
+
+Events failing both of the above cut sets will go into the d box.
+

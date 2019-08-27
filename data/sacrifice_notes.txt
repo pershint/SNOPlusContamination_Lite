@@ -1,0 +1,32 @@
+Calculating values in the sacrifice_summary.json
+
+sacrifice_summary.json files have a summary of the
+estimated sacrifice and uncertainties of events due to
+the data cleaning cut bifurcation branch (cut1) and the
+classifiers (cut2).  To calculate the entries in the 
+"sacrifice_summary.json" related to a variable 
+to a variable (energy, for this example):
+
+1. Get fully processed dataset of interest.  ntuples 
+are preferred, as they will be faster to search and have
+data cleaning cut information.
+
+2. Remove any events that fail the preliminary cuts.  Preliminary
+cuts used in nucleon decay analysis detailed in water unidoc.
+
+3. Create the fractional sacrifice histogram as a function of
+energy.  This sacrifice will be associated with either the data cleaning
+bifurcaiton branch cuts (cut1) or the classifiers (cut2).
+
+4. Fit a flat line to the sacrifice distribution.  When fitting, be sure
+to have the fit weigh each bin by it's statistical uncertainties.  For example,
+if using scipy.optimize.curve_fit to fit the straight line, you want to give 
+the array of uncertainties to the "sigma" argument.
+
+In sacrifice_summary.json, the best fit sacrifice is the "sacrifice" value, and
+the uncertainty on the fit is the "stat_unc" entry.
+
+5. Calculate the sacrifice histogram's standard deviation from the best fit
+line.  This result is the "sys_unc" entry of sacrifice_summary.json.
+
+

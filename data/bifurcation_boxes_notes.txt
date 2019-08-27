@@ -1,0 +1,25 @@
+##How to calculate the values associated with bifurcation_boxes.json##
+
+The following steps describe how to fill in the bifurcation_boxes.json
+file that is read in by the contamination analyzer class.  
+
+1. Get fully processed dataset of interest.  ntuples 
+are preferred, as they will be faster to search and have
+data cleaning cut information.
+
+2. Count the number of events in your dataset.  This value is the
+"allev" entry of bifurcation_boxes.json.
+
+2. Remove any events that fail the preliminary cuts.  Preliminary
+cuts used in nucleon decay analysis detailed in water unidoc.  The
+remaining number of events is the "pass_path" entry of bifurcation_boxes.json.
+
+3. Loop over the remaining events and check to see if each event fails
+or passes the cuts defining the two bifurcation branches "cut1" and "cut2".  
+For each event, increment the "a", "b", "c", or "d" entry in 
+bifurcation_boxes.json based on matching the following criteria:
+
+A: passes cut 1 (data cleaning), passes cut 2 (classifiers)
+C: passes cut 1 (data cleaning), fails cut 2 (classifiers)
+B: fails cut 1 (data cleaning), passes cut 2 (classifiers)
+D: fails cut 1 (data cleaning), fails cut 2 (classifiers)
